@@ -1,2 +1,5 @@
-.ropeproject
-oanda.conf
+.ropeproject/
+*.conf
+data/
+__pycache__/
+/sample*.csv
