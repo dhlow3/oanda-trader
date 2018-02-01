@@ -1,9 +1,10 @@
 """Get .csv data file of historical FX prices."""
 import argparse
+from os.path import exists
+
 import oandapyV20.endpoints.instruments as instruments
 import pandas as pd
 from oandapyV20 import API
-from os.path import exists
 
 from config import get_config
 
@@ -14,7 +15,7 @@ def get_args():
     Returns
     ----------
     args: dict
-        Arguments parsed from the command line and any defults not parsed.
+        Arguments parsed from the command line and any defaults not parsed.
 
     """
     parser = argparse.ArgumentParser(

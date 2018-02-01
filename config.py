@@ -19,18 +19,13 @@ def get_config(config_file):
     with open(config_file) as c_file:
         config = yaml.load(c_file)
 
-    config_params = {'user': config.get('user'),
-                     'pass': config.get('pass'),
-                     'token': config.get('token'),
-                     'account': config.get('account')}
-    return config_params
+    return config
 
 
 def main():
     """Do main stuff."""
     c = get_config('./oanda.conf')
-    print('user: {user}\npass: {pass}\ntoken: {token}\naccount: {account}'
-          .format(**c))
+    print(c)
 
 
 if __name__ == '__main__':
