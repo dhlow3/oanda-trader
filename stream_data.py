@@ -14,7 +14,7 @@ def get_args():
     Returns
     ----------
     args: dict
-        Arguments parsed from the command line and any defaults not parsed.
+        Arguments parsed from the command line.
 
     """
     parser = argparse.ArgumentParser(
@@ -29,7 +29,7 @@ def get_args():
     parser.add_argument('-c',
                         dest='count',
                         metavar='COUNT',
-                        default='5',
+                        default=0,
                         type=int,
                         help='the number of bars to get')
     parser_args = parser.parse_args()
@@ -46,12 +46,12 @@ def get_args():
 
     assert exists(args['config_file'])
 
-    assert args['count'] > 0, 'count must be positive integer'
+    assert args['count'] >= 0, 'count must be greater than or equal 0'
 
     return args
 
 
-def stream_prices(pair, config_file, count):
+def stream_prices(pair, config_file, count=0):
     """Stream price data.
 
     Parameters
@@ -61,7 +61,7 @@ def stream_prices(pair, config_file, count):
     config_file : str
         Location of configuration file.
     count: int
-        The number of price bars to get.
+        The number of price bars to get; infinite bars if count=0.
 
     """
     conf = get_config(config_file)
@@ -76,18 +76,31 @@ def stream_prices(pair, config_file, count):
 
     n = 0
     print('\n{}'.format(pair))
-    for _ in api.request(r):
-        if _['type'] == 'PRICE':
-            d = dict(bid=_['bids'][0]['price'],
-                     ask=_['asks'][0]['price'])
-            d['spread'] = round(float(d['ask']) * spread_multiplier -
-                                float(d['bid']) * spread_multiplier, 1)
-            print('Bid: {}'.format(d['bid']))
-            print('Ask: {}'.format(d['ask']))
-            print('Spread: {}\n'.format(d['spread']))
-            n += 1
-            if n >= count:
-                break
+
+    while True:
+        try:
+            for _ in api.request(r):
+                if _['type'] == 'PRICE':
+                    d = dict(bid=_['bids'][0]['price'],
+                             ask=_['asks'][0]['price'])
+                    d['spread'] = round(float(d['ask']) * spread_multiplier -
+                                        float(d['bid']) * spread_multiplier, 1)
+                    print('Bid: {}'.format(d['bid']))
+                    print('Ask: {}'.format(d['ask']))
+                    print('Spread: {}\n'.format(d['spread']))
+
+                    if count:
+                        n += 1
+                    else:
+                        # Keep looping if no count was specified
+                        n = -1
+
+                    if n >= count:
+                        break
+            break
+
+        except KeyboardInterrupt:
+            break
 
 
 if __name__ == '__main__':
