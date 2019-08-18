@@ -22,8 +22,8 @@ pyparsing==2.2.0
 python-dateutil==2.6.1
 python-language-server==0.13.0
 pytz==2017.3
+requests==2.20.0
 PyYAML==5.1
-requests==2.18.4
 rope==0.11.0
 six==1.11.0
 snowballstemmer==1.2.1
