@@ -8,7 +8,7 @@ jedi==0.11.1
 json-rpc==1.10.8
 matplotlib==2.1.2
 mccabe==0.6.1
-numpy==1.14.0
+numpy==1.22.0
 oandapyV20==0.4.5
 pandas==0.22.0
 parso==0.1.1
